@@ -570,6 +570,7 @@ func (t *TableCommon) AddRecord(ctx sessionctx.Context, r []types.Datum, opts ..
 		return 0, err
 	}
 	value := writeBufs.RowValBuf
+	//先写入内存中后,事务docommit 时才会真正写到kv中
 	if err = execBuf.Set(key, value); err != nil {
 		return 0, err
 	}

@@ -17,6 +17,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/push"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -32,7 +34,6 @@ import (
 	"github.com/pingcap/log"
 	"github.com/pingcap/parser/mysql"
 	"github.com/pingcap/parser/terror"
-	pd "github.com/pingcap/pd/v4/client"
 	pumpcli "github.com/pingcap/tidb-tools/tidb-binlog/pump_client"
 	"github.com/pingcap/tidb/bindinfo"
 	"github.com/pingcap/tidb/config"
@@ -64,8 +65,8 @@ import (
 	"github.com/pingcap/tidb/util/sys/linux"
 	storageSys "github.com/pingcap/tidb/util/sys/storage"
 	"github.com/pingcap/tidb/util/systimemon"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/push"
+
+	pd "github.com/tikv/pd/client"
 	"go.uber.org/automaxprocs/maxprocs"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/grpclog"
@@ -109,7 +110,7 @@ const (
 
 var (
 	version      = flagBoolean(nmVersion, false, "print version information and exit")
-	configPath   = flag.String(nmConfig, "", "config file path")
+	configPath   = flag.String(nmConfig, "/Users/qumingxing/go/src/github.com/pingcap/tidb/config/config.toml", "config file path")
 	configCheck  = flagBoolean(nmConfigCheck, false, "check config file validity and exit")
 	configStrict = flagBoolean(nmConfigStrict, false, "enforce config file validity")
 
@@ -142,7 +143,7 @@ var (
 	statusHost      = flag.String(nmStatusHost, "0.0.0.0", "tidb server status host")
 	statusPort      = flag.String(nmStatusPort, "10080", "tidb server status port")
 	metricsAddr     = flag.String(nmMetricsAddr, "", "prometheus pushgateway address, leaves it empty will disable prometheus push.")
-	metricsInterval = flag.Uint(nmMetricsInterval, 15, "prometheus client push interval in second, set \"0\" to disable prometheus push.")
+	metricsInterval = flag.Uint(nmMetricsInterval, 0, "prometheus client push interval in second, set \"0\" to disable prometheus push.")
 
 	// PROXY Protocol
 	proxyProtocolNetworks      = flag.String(nmProxyProtocolNetworks, "", "proxy protocol networks allowed IP or *, empty mean disable proxy protocol support")
