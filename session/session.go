@@ -1086,6 +1086,9 @@ func (s *session) Execute(ctx context.Context, sql string) (recordSets []sqlexec
 }
 
 func (s *session) execute(ctx context.Context, sql string) (recordSets []sqlexec.RecordSet, err error) {
+	if strings.HasPrefix(sql, "insert") {
+		fmt.Println("insert", sql, "=====")
+	}
 	s.PrepareTxnCtx(ctx)
 	err = s.loadCommonGlobalVariablesIfNeeded()
 	if err != nil {

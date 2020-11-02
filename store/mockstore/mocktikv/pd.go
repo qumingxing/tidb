@@ -51,9 +51,9 @@ func NewPDClient(cluster *Cluster) pd.Client {
 	}
 }
 
-func (c *pdClient) ConfigClient() pd.ConfigClient {
+/*func (c *pdClient) ConfigClient() pd.ConfigClient {
 	return nil
-}
+}*/
 
 func (c *pdClient) GetClusterID(ctx context.Context) uint64 {
 	return 1
